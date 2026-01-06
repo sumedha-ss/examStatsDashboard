@@ -89,11 +89,14 @@ function calculateAttemptsHistogram() {
   };
 }
 
-function renderHistogram() {
+// State for chart view type
+let chartViewType = "histogram"; // "histogram" or "pie"
+
+function renderChart() {
   const histogram = calculateAttemptsHistogram();
   const histogramDiv = document.getElementById("histogram");
 
-  // Calculate max value for scaling
+  // Calculate max value for scaling (histogram only)
   const maxValue = Math.max(
     histogram.oneAttempt,
     histogram.twoAttempts,
@@ -105,10 +108,22 @@ function renderHistogram() {
   const twoWidth = (histogram.twoAttempts / maxValue) * 100;
   const threeWidth = (histogram.threePlusAttempts / maxValue) * 100;
 
-  histogramDiv.innerHTML = `
-    <div class="histogram-container">
-      <h2 class="histogram-title">Question Attempts</h2>
-      <p class="histogram-subtitle">How many questions were solved in…</p>
+  // Calculate totals for pie chart
+  const total =
+    histogram.oneAttempt + histogram.twoAttempts + histogram.threePlusAttempts;
+  const onePercent = total > 0 ? (histogram.oneAttempt / total) * 100 : 0;
+  const twoPercent = total > 0 ? (histogram.twoAttempts / total) * 100 : 0;
+  const threePercent =
+    total > 0 ? (histogram.threePlusAttempts / total) * 100 : 0;
+
+  // Calculate pie chart angles
+  const oneAngle = (onePercent / 100) * 360;
+  const twoAngle = (twoPercent / 100) * 360;
+  const threeAngle = (threePercent / 100) * 360;
+
+  let chartContent = "";
+  if (chartViewType === "histogram") {
+    chartContent = `
       <div class="histogram-chart">
         <div class="histogram-bar-wrapper">
           <span class="histogram-bar-label">1 attempt</span>
@@ -132,8 +147,109 @@ function renderHistogram() {
           <span class="histogram-bar-value">${histogram.threePlusAttempts}</span>
         </div>
       </div>
+    `;
+  } else {
+    // Pie chart using SVG paths
+    const radius = 80;
+    const centerX = 100;
+    const centerY = 100;
+
+    // Helper function to create arc path
+    function createArc(startAngle, endAngle) {
+      const start = polarToCartesian(centerX, centerY, radius, endAngle);
+      const end = polarToCartesian(centerX, centerY, radius, startAngle);
+      const largeArcFlag = endAngle - startAngle <= 180 ? "0" : "1";
+      return [
+        "M",
+        centerX,
+        centerY,
+        "L",
+        start.x,
+        start.y,
+        "A",
+        radius,
+        radius,
+        0,
+        largeArcFlag,
+        0,
+        end.x,
+        end.y,
+        "Z",
+      ].join(" ");
+    }
+
+    function polarToCartesian(centerX, centerY, radius, angleInDegrees) {
+      const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;
+      return {
+        x: centerX + radius * Math.cos(angleInRadians),
+        y: centerY + radius * Math.sin(angleInRadians),
+      };
+    }
+
+    // Calculate angles (start from -90 degrees for top)
+    let currentAngle = -90;
+    const oneAngle = (onePercent / 100) * 360;
+    const twoAngle = (twoPercent / 100) * 360;
+    const threeAngle = (threePercent / 100) * 360;
+
+    const oneStart = currentAngle;
+    const oneEnd = currentAngle + oneAngle;
+    currentAngle += oneAngle;
+
+    const twoStart = currentAngle;
+    const twoEnd = currentAngle + twoAngle;
+    currentAngle += twoAngle;
+
+    const threeStart = currentAngle;
+    const threeEnd = currentAngle + threeAngle;
+
+    chartContent = `
+      <div class="pie-chart">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+          <path d="${createArc(oneStart, oneEnd)}" fill="#b3a078" />
+          <path d="${createArc(twoStart, twoEnd)}" fill="#928156" />
+          <path d="${createArc(threeStart, threeEnd)}" fill="#7a6b4a" />
+        </svg>
+        <div class="pie-legend">
+          <div class="pie-legend-item">
+            <span class="pie-color" style="background-color: #b3a078"></span>
+            <span class="pie-label">1 attempt</span>
+            <span class="pie-value">${histogram.oneAttempt}</span>
+          </div>
+          <div class="pie-legend-item">
+            <span class="pie-color" style="background-color: #928156"></span>
+            <span class="pie-label">2 attempts</span>
+            <span class="pie-value">${histogram.twoAttempts}</span>
+          </div>
+          <div class="pie-legend-item">
+            <span class="pie-color" style="background-color: #7a6b4a"></span>
+            <span class="pie-label">3+ attempts</span>
+            <span class="pie-value">${histogram.threePlusAttempts}</span>
+          </div>
+        </div>
+      </div>
+    `;
+  }
+
+  histogramDiv.innerHTML = `
+    <div class="histogram-container">
+      <div class="histogram-header">
+        <div class="histogram-title-section">
+          <h2 class="histogram-title">Question Attempts</h2>
+          <p class="histogram-subtitle">How many questions were solved in…</p>
+        </div>
+        <button class="chart-toggle-btn" onclick="toggleChartView()">
+          ${chartViewType === "histogram" ? "Pie Chart View" : "Histogram View"}
+        </button>
+      </div>
+      ${chartContent}
     </div>
   `;
+}
+
+function toggleChartView() {
+  chartViewType = chartViewType === "histogram" ? "pie" : "histogram";
+  renderChart();
 }
 
 function renderData() {
@@ -190,5 +306,5 @@ function renderData() {
 
 // initialize content
 renderStatistics();
-renderHistogram();
+renderChart();
 renderData();
