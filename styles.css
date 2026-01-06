@@ -1,0 +1,102 @@
+body {
+  font-family: Arial, sans-serif;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f5f5f5;
+}
+
+h1 {
+  color: #333;
+  text-align: center;
+  margin-bottom: 50px;
+}
+
+#content {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.question-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.question-id {
+  font-weight: bold;
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #eee;
+}
+
+.attempt {
+  padding: 10px;
+  margin-bottom: 10px;
+  background-color: #fafafa;
+}
+
+.attempt.correct {
+  background-color: #f1f8f4;
+}
+
+.attempt.incorrect {
+  background-color: #fff5f5;
+}
+
+.attempt-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 5px;
+}
+
+.attempt-id {
+  font-size: 12px;
+  color: #999;
+}
+
+.correct-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.correct-badge.true {
+  background-color: #4caf50;
+  color: white;
+}
+
+.correct-badge.false {
+  background-color: #f44336;
+  color: white;
+}
+
+.solution {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+.solution-label {
+  font-weight: bold;
+  color: #555;
+}
+
+.solution-value {
+  color: #333;
+}
+
+.attempt-count {
+  display: inline-block;
+  margin-left: 10px;
+  padding: 2px 8px;
+  background-color: #e3f2fd;
+  border-radius: 12px;
+  font-size: 12px;
+  color: #1976d2;
+}
