@@ -4,6 +4,67 @@ function numberToLetter(num) {
   return letters[num];
 }
 
+// calculate question statistics
+function calculateStatistics() {
+  const questions = Object.values(LocalSubmissions);
+  const totalQuestions = questions.length;
+
+  let correctCount = 0;
+  let incorrectCount = 0;
+  let totalAttempts = 0;
+
+  questions.forEach((questionData) => {
+    const hasCorrect = questionData.attempts.some((attempt) => attempt.correct);
+    if (hasCorrect) {
+      correctCount++;
+    } else {
+      incorrectCount++;
+    }
+    totalAttempts += questionData.attempts.length;
+  });
+
+  const accuracyRate =
+    totalQuestions > 0 ? (correctCount / totalQuestions) * 100 : 0;
+  const avgAttempts = totalQuestions > 0 ? totalAttempts / totalQuestions : 0;
+
+  return {
+    totalQuestions,
+    correctCount,
+    incorrectCount,
+    accuracyRate,
+    avgAttempts,
+  };
+}
+
+function renderStatistics() {
+  const stats = calculateStatistics();
+  const statsDiv = document.getElementById("statistics");
+  statsDiv.innerHTML = `
+    <div class="statistics-container">
+      <div class="stat-card">
+        <div class="stat-label">Total Questions</div>
+        <div class="stat-value">${stats.totalQuestions}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Number Correct</div>
+        <div class="stat-value">${stats.correctCount}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Number Incorrect</div>
+        <div class="stat-value">${stats.incorrectCount}</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Accuracy Rate</div>
+        <div class="stat-value">${stats.accuracyRate.toFixed(1)}%</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Average Attempts</div>
+        <div class="stat-value">${stats.avgAttempts.toFixed(1)}</div>
+      </div>
+    </div>
+  `;
+}
+
 function renderData() {
   const contentDiv = document.getElementById("content");
   contentDiv.innerHTML = "";
@@ -56,5 +117,6 @@ function renderData() {
   });
 }
 
-// initialize page
+// initialize content
+renderStatistics();
 renderData();
