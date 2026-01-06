@@ -40,6 +40,7 @@ function renderStatistics() {
   const stats = calculateStatistics();
   const statsDiv = document.getElementById("statistics");
   statsDiv.innerHTML = `
+    <h2 class="section-title">Overall Statistics</h2>
     <div class="statistics-container">
       <div class="stat-card">
         <div class="stat-label">Total Questions</div>
@@ -335,6 +336,8 @@ function renderChart() {
         ${attemptsChartContent}
       </div>
     </div>
+    <div class="section-divider"></div>
+    <h2 class="section-title-two">Question Statistics</h2>
   `;
 
   // add hover effects for pie charts
