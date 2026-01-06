@@ -159,7 +159,7 @@ function renderChart() {
     ].join(" ");
   }
 
-  // Accuracy pie chart data (left stats box)
+  // Accuracy Pie Chart Data (left stats box)
   const totalQuestions = stats.totalQuestions || 0;
   const correctCount = stats.correctCount;
   const incorrectCount = stats.incorrectCount;
@@ -459,6 +459,61 @@ function setupAccuracyPieChartHover() {
       }
     });
   });
+
+  // add hover effects to legend items
+  legendItems.forEach((legendItem) => {
+    let overlayPath = null;
+
+    legendItem.addEventListener("mouseenter", () => {
+      const segmentNum = legendItem.getAttribute("data-segment");
+      const correspondingSegment = Array.from(segments).find((seg) => {
+        if (segmentNum === "1") {
+          return seg.classList.contains("accuracy-segment-1");
+        } else {
+          return seg.classList.contains("accuracy-segment-2");
+        }
+      });
+
+      if (correspondingSegment) {
+        // highlight legend item
+        legendItem.classList.add("legend-hovered");
+
+        // get segment data
+        const startAngle = parseFloat(
+          correspondingSegment.getAttribute("data-start-angle")
+        );
+        const endAngle = parseFloat(
+          correspondingSegment.getAttribute("data-end-angle")
+        );
+        const pathData = correspondingSegment.getAttribute("d");
+
+        // add overlay path
+        if (svg) {
+          overlayPath = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+          );
+          overlayPath.setAttribute("d", pathData);
+          overlayPath.setAttribute("fill", "rgba(255, 255, 255, 0.3)");
+          overlayPath.setAttribute("class", "pie-segment-overlay");
+          overlayPath.style.pointerEvents = "none";
+          overlayPath.style.filter = "drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))";
+          svg.appendChild(overlayPath);
+        }
+      }
+    });
+
+    legendItem.addEventListener("mouseleave", () => {
+      // remove legend highlight
+      legendItem.classList.remove("legend-hovered");
+
+      // remove overlay path
+      if (overlayPath && overlayPath.parentNode) {
+        overlayPath.parentNode.removeChild(overlayPath);
+        overlayPath = null;
+      }
+    });
+  });
 }
 
 function setupPieChartHover() {
@@ -571,6 +626,63 @@ function setupPieChartHover() {
       }
 
       // remove overlay
+      if (overlayPath && overlayPath.parentNode) {
+        overlayPath.parentNode.removeChild(overlayPath);
+        overlayPath = null;
+      }
+    });
+  });
+
+  // add hover effects to legend items
+  legendItems.forEach((legendItem) => {
+    let overlayPath = null;
+
+    legendItem.addEventListener("mouseenter", () => {
+      const segmentNum = legendItem.getAttribute("data-segment");
+      const correspondingSegment = Array.from(segments).find((seg) => {
+        if (segmentNum === "1") {
+          return seg.classList.contains("pie-segment-1");
+        } else if (segmentNum === "2") {
+          return seg.classList.contains("pie-segment-2");
+        } else {
+          return seg.classList.contains("pie-segment-3");
+        }
+      });
+
+      if (correspondingSegment) {
+        // highlight legend label
+        legendItem.classList.add("legend-hovered");
+
+        // get segment data
+        const startAngle = parseFloat(
+          correspondingSegment.getAttribute("data-start-angle")
+        );
+        const endAngle = parseFloat(
+          correspondingSegment.getAttribute("data-end-angle")
+        );
+        const pathData = correspondingSegment.getAttribute("d");
+
+        // add overlay path
+        if (svg) {
+          overlayPath = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "path"
+          );
+          overlayPath.setAttribute("d", pathData);
+          overlayPath.setAttribute("fill", "rgba(255, 255, 255, 0.3)");
+          overlayPath.setAttribute("class", "pie-segment-overlay");
+          overlayPath.style.pointerEvents = "none";
+          overlayPath.style.filter = "drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))";
+          svg.appendChild(overlayPath);
+        }
+      }
+    });
+
+    legendItem.addEventListener("mouseleave", () => {
+      // remove legend highlight
+      legendItem.classList.remove("legend-hovered");
+
+      // remove overlay path
       if (overlayPath && overlayPath.parentNode) {
         overlayPath.parentNode.removeChild(overlayPath);
         overlayPath = null;
