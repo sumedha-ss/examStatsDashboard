@@ -56,6 +56,76 @@ h1 {
   color: #928156;
 }
 
+#histogram {
+  margin-bottom: 52px;
+}
+
+.histogram-container {
+  background-color: white;
+  padding: 12px 25px 25px 25px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.histogram-title {
+  font-size: 20px;
+  font-weight: bold;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.histogram-subtitle {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 30px;
+  font-style: italic;
+}
+
+.histogram-chart {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.histogram-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+}
+
+.histogram-bar-label {
+  min-width: 120px;
+  font-size: 16px;
+  color: #333;
+  font-weight: 500;
+}
+
+.histogram-bar-container {
+  flex: 1;
+  height: 40px;
+  background-color: #f0f0f0;
+  border-radius: 6px;
+  position: relative;
+  overflow: hidden;
+}
+
+.histogram-bar {
+  height: 100%;
+  background-color: #928156;
+  border-radius: 6px;
+  min-width: 4px;
+  transition: width 0.3s ease;
+}
+
+.histogram-bar-value {
+  color: #333;
+  font-weight: bold;
+  font-size: 16px;
+  margin-left: 10px;
+  min-width: 30px;
+}
+
 #content {
   column-count: 2;
   column-gap: 20px;

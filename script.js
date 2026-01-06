@@ -65,6 +65,77 @@ function renderStatistics() {
   `;
 }
 
+function calculateAttemptsHistogram() {
+  const questions = Object.values(LocalSubmissions);
+  let oneAttempt = 0;
+  let twoAttempts = 0;
+  let threePlusAttempts = 0;
+
+  questions.forEach((questionData) => {
+    const attemptCount = questionData.attempts.length;
+    if (attemptCount === 1) {
+      oneAttempt++;
+    } else if (attemptCount === 2) {
+      twoAttempts++;
+    } else if (attemptCount >= 3) {
+      threePlusAttempts++;
+    }
+  });
+
+  return {
+    oneAttempt,
+    twoAttempts,
+    threePlusAttempts,
+  };
+}
+
+function renderHistogram() {
+  const histogram = calculateAttemptsHistogram();
+  const histogramDiv = document.getElementById("histogram");
+
+  // Calculate max value for scaling
+  const maxValue = Math.max(
+    histogram.oneAttempt,
+    histogram.twoAttempts,
+    histogram.threePlusAttempts,
+    1
+  );
+
+  const oneWidth = (histogram.oneAttempt / maxValue) * 100;
+  const twoWidth = (histogram.twoAttempts / maxValue) * 100;
+  const threeWidth = (histogram.threePlusAttempts / maxValue) * 100;
+
+  histogramDiv.innerHTML = `
+    <div class="histogram-container">
+      <h2 class="histogram-title">Question Attempts</h2>
+      <p class="histogram-subtitle">How many questions were solved in…</p>
+      <div class="histogram-chart">
+        <div class="histogram-bar-wrapper">
+          <span class="histogram-bar-label">1 attempt</span>
+          <div class="histogram-bar-container">
+            <div class="histogram-bar" style="width: ${oneWidth}%"></div>
+          </div>
+          <span class="histogram-bar-value">${histogram.oneAttempt}</span>
+        </div>
+        <div class="histogram-bar-wrapper">
+          <span class="histogram-bar-label">2 attempts</span>
+          <div class="histogram-bar-container">
+            <div class="histogram-bar" style="width: ${twoWidth}%"></div>
+          </div>
+          <span class="histogram-bar-value">${histogram.twoAttempts}</span>
+        </div>
+        <div class="histogram-bar-wrapper">
+          <span class="histogram-bar-label">3+ attempts</span>
+          <div class="histogram-bar-container">
+            <div class="histogram-bar" style="width: ${threeWidth}%"></div>
+          </div>
+          <span class="histogram-bar-value">${histogram.threePlusAttempts}</span>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
 function renderData() {
   const contentDiv = document.getElementById("content");
   contentDiv.innerHTML = "";
@@ -119,4 +190,5 @@ function renderData() {
 
 // initialize content
 renderStatistics();
+renderHistogram();
 renderData();
