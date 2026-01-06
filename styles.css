@@ -112,7 +112,7 @@ h1 {
 .histogram-bar-label {
   min-width: 120px;
   font-size: 16px;
-  color: #333;
+  color: #9b8181;
   font-weight: 500;
 }
 
@@ -134,11 +134,18 @@ h1 {
 }
 
 .histogram-bar-value {
-  color: #333;
+  color: #9b8181;
   font-weight: bold;
   font-size: 16px;
   margin-left: 10px;
   min-width: 30px;
+  transition: font-size 0.2s ease, transform 0.2s ease;
+}
+
+.histogram-bar-wrapper:hover .histogram-bar-value {
+  font-size: 18px;
+  transform: scale(1.15);
+  color: #725f5f;
 }
 
 .chart-toggle-btn {
@@ -166,6 +173,36 @@ h1 {
   margin-top: -10px;
 }
 
+.pie-chart-svg-container {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.pie-segment {
+  cursor: pointer;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.pie-segment:hover {
+  opacity: 0.7;
+  filter: drop-shadow(0 0 10px rgba(0, 0, 0, 0.35));
+}
+
+.pie-overlay {
+  position: absolute;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 22px;
+  color: #ffffff;
+  pointer-events: none;
+  transform: translate(-50%, -50%);
+  white-space: nowrap;
+  z-index: 10;
+}
+
 .pie-legend {
   display: flex;
   flex-direction: column;
@@ -176,6 +213,13 @@ h1 {
   display: flex;
   align-items: center;
   gap: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  transition: background-color 0.2s ease;
+}
+
+.pie-legend-item.legend-hovered {
+  background-color: #f4e4c9;
 }
 
 .pie-color {
@@ -195,7 +239,7 @@ h1 {
 .pie-value {
   font-size: 16px;
   font-weight: bold;
-  color: #333;
+  color: #928156;
 }
 
 #content {

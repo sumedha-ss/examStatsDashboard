@@ -205,24 +205,42 @@ function renderChart() {
 
     chartContent = `
       <div class="pie-chart">
-        <svg width="200" height="200" viewBox="0 0 200 200">
-          <path d="${createArc(oneStart, oneEnd)}" fill="#b3a078" />
-          <path d="${createArc(twoStart, twoEnd)}" fill="#928156" />
-          <path d="${createArc(threeStart, threeEnd)}" fill="#7a6b4a" />
-        </svg>
+        <div class="pie-chart-svg-container">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <path class="pie-segment pie-segment-1" d="${createArc(
+              oneStart,
+              oneEnd
+            )}" fill="rgb(200, 180, 150)" data-value="${
+      histogram.oneAttempt
+    }" data-start-angle="${oneStart}" data-end-angle="${oneEnd}" />
+            <path class="pie-segment pie-segment-2" d="${createArc(
+              twoStart,
+              twoEnd
+            )}" fill="rgb(175, 155, 115)" data-value="${
+      histogram.twoAttempts
+    }" data-start-angle="${twoStart}" data-end-angle="${twoEnd}" />
+            <path class="pie-segment pie-segment-3" d="${createArc(
+              threeStart,
+              threeEnd
+            )}" fill="rgb(145, 130, 95)" data-value="${
+      histogram.threePlusAttempts
+    }" data-start-angle="${threeStart}" data-end-angle="${threeEnd}" />
+          </svg>
+          <div class="pie-overlay"></div>
+        </div>
         <div class="pie-legend">
-          <div class="pie-legend-item">
-            <span class="pie-color" style="background-color: #b3a078"></span>
+          <div class="pie-legend-item" data-segment="1">
+            <span class="pie-color" style="background-color:rgb(200, 180, 150)"></span>
             <span class="pie-label">1 attempt</span>
             <span class="pie-value">${histogram.oneAttempt}</span>
           </div>
-          <div class="pie-legend-item">
-            <span class="pie-color" style="background-color: #928156"></span>
+          <div class="pie-legend-item" data-segment="2">
+            <span class="pie-color" style="background-color:rgb(175, 155, 115)"></span>
             <span class="pie-label">2 attempts</span>
             <span class="pie-value">${histogram.twoAttempts}</span>
           </div>
-          <div class="pie-legend-item">
-            <span class="pie-color" style="background-color: #7a6b4a"></span>
+          <div class="pie-legend-item" data-segment="3">
+            <span class="pie-color" style="background-color:rgb(145, 130, 95)"></span>
             <span class="pie-label">3+ attempts</span>
             <span class="pie-value">${histogram.threePlusAttempts}</span>
           </div>
@@ -245,6 +263,126 @@ function renderChart() {
       ${chartContent}
     </div>
   `;
+
+  // Add hover effects for pie chart
+  if (chartViewType === "pie") {
+    setupPieChartHover();
+  }
+}
+
+function setupPieChartHover() {
+  const segments = document.querySelectorAll(".pie-segment");
+  const legendItems = document.querySelectorAll(".pie-legend-item");
+  const overlay = document.querySelector(".pie-overlay");
+  const svg = document.querySelector(".pie-chart svg");
+
+  segments.forEach((segment) => {
+    let overlayPath = null; // Store reference to overlay path for this segment
+
+    segment.addEventListener("mouseenter", (e) => {
+      const segmentNum = e.target.classList.contains("pie-segment-1")
+        ? "1"
+        : e.target.classList.contains("pie-segment-2")
+        ? "2"
+        : "3";
+      const value = e.target.getAttribute("data-value");
+      const rect = e.target.getBoundingClientRect();
+      const svgRect = e.target.closest("svg").getBoundingClientRect();
+
+      // Highlight corresponding legend item
+      legendItems.forEach((item) => {
+        if (item.getAttribute("data-segment") === segmentNum) {
+          item.classList.add("legend-hovered");
+        }
+      });
+
+      // Add white semi-transparent overlay on the segment
+      if (svg) {
+        const startAngle = parseFloat(
+          e.target.getAttribute("data-start-angle")
+        );
+        const endAngle = parseFloat(e.target.getAttribute("data-end-angle"));
+        const pathData = e.target.getAttribute("d");
+
+        // Create overlay path with white semi-transparent fill
+        overlayPath = document.createElementNS(
+          "http://www.w3.org/2000/svg",
+          "path"
+        );
+        overlayPath.setAttribute("d", pathData);
+        overlayPath.setAttribute("fill", "rgba(255, 255, 255, 0.01)");
+        overlayPath.setAttribute("class", "pie-segment-overlay");
+        overlayPath.style.pointerEvents = "none";
+        svg.appendChild(overlayPath);
+      }
+
+      // Show overlay with count - position at geometric center of segment
+      if (overlay) {
+        const svgContainer = e.target.closest(".pie-chart-svg-container");
+        const svg = e.target.closest("svg");
+        const svgRect = svg.getBoundingClientRect();
+
+        // Get angle information from data attributes
+        const startAngle = parseFloat(
+          e.target.getAttribute("data-start-angle")
+        );
+        const endAngle = parseFloat(e.target.getAttribute("data-end-angle"));
+
+        // Calculate middle angle of the segment
+        let middleAngle = (startAngle + endAngle) / 2;
+
+        // Convert to radians (SVG uses -90 degrees as top, so adjust)
+        const angleRadians = ((middleAngle - 90) * Math.PI) / 180.0;
+
+        // Calculate position at fixed distance from center (same for all segments)
+        const radius = 80;
+        const offsetRadius = 40; // Fixed distance from center (50% of radius) - same for all
+        const svgSize = 200; // SVG viewBox size
+        const svgCenter = svgSize / 2;
+
+        // Calculate position in SVG coordinates using polar coordinates
+        // This ensures all numbers are at the exact same distance from center
+        const x = svgCenter + offsetRadius * Math.cos(angleRadians);
+        const y = svgCenter + offsetRadius * Math.sin(angleRadians);
+
+        // Convert to container coordinates (accounting for any scaling)
+        const svgScale = svgRect.width / svgSize;
+        const containerX = x * svgScale;
+        const containerY = y * svgScale;
+
+        overlay.style.display = "flex";
+        overlay.style.left = `${containerX}px`;
+        overlay.style.top = `${containerY}px`;
+        overlay.textContent = value;
+      }
+    });
+
+    segment.addEventListener("mouseleave", (e) => {
+      const segmentNum = e.target.classList.contains("pie-segment-1")
+        ? "1"
+        : e.target.classList.contains("pie-segment-2")
+        ? "2"
+        : "3";
+
+      // Remove highlight from legend item
+      legendItems.forEach((item) => {
+        if (item.getAttribute("data-segment") === segmentNum) {
+          item.classList.remove("legend-hovered");
+        }
+      });
+
+      // Hide overlay
+      if (overlay) {
+        overlay.style.display = "none";
+      }
+
+      // Remove white semi-transparent overlay from segment
+      if (overlayPath && overlayPath.parentNode) {
+        overlayPath.parentNode.removeChild(overlayPath);
+        overlayPath = null;
+      }
+    });
+  });
 }
 
 function toggleChartView() {
