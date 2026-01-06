@@ -706,13 +706,19 @@ function renderData() {
 
     const questionHeader = document.createElement("div");
     questionHeader.className = "question-id";
+    questionHeader.style.cursor = "pointer";
     questionHeader.innerHTML = `
+        <span class="question-toggle">▼</span>
         Question ID: ${questionId}
         <span class="attempt-count">${questionData.attempts.length} attempt${
       questionData.attempts.length !== 1 ? "s" : ""
     }</span>
       `;
     questionContainer.appendChild(questionHeader);
+
+    const attemptsContainer = document.createElement("div");
+    attemptsContainer.className = "attempts-container";
+    attemptsContainer.style.display = "block"; // default to open
 
     questionData.attempts.forEach((attempt, index) => {
       const attemptDiv = document.createElement("div");
@@ -741,9 +747,22 @@ function renderData() {
         `;
       attemptDiv.appendChild(solutionDiv);
 
-      questionContainer.appendChild(attemptDiv);
+      attemptsContainer.appendChild(attemptDiv);
     });
 
+    questionHeader.addEventListener("click", () => {
+      const isExpanded = attemptsContainer.style.display !== "none";
+      attemptsContainer.style.display = isExpanded ? "none" : "block";
+      const toggle = questionHeader.querySelector(".question-toggle");
+      toggle.textContent = isExpanded ? "▶" : "▼";
+      // Hide/show divider line based on collapsed state
+      questionHeader.style.borderBottom = isExpanded
+        ? "none"
+        : "2px solid #eee";
+      questionHeader.style.marginBottom = isExpanded ? "0px" : "15px";
+    });
+
+    questionContainer.appendChild(attemptsContainer);
     contentDiv.appendChild(questionContainer);
   });
 }

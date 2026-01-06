@@ -308,6 +308,24 @@ h1 {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.2s ease;
+}
+
+.question-id:hover {
+  background-color: #f5f5f5;
+}
+
+.question-toggle {
+  margin-right: 8px;
+  color: #928156;
+  font-size: 12px;
+  transition: transform 0.2s ease;
+}
+
+.attempts-container {
+  margin-top: 10px;
 }
 
 .attempt {
