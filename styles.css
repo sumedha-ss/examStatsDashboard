@@ -61,11 +61,18 @@ h1 {
   margin-bottom: 52px;
 }
 
+.histogram-layout {
+  display: flex;
+  gap: 24px;
+  align-items: stretch;
+}
+
 .histogram-container {
   background-color: white;
   padding: 12px 25px 25px 25px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  flex: 1;
 }
 
 .histogram-header {
@@ -171,6 +178,16 @@ h1 {
   gap: 40px;
   justify-content: center;
   margin-top: -10px;
+}
+
+.accuracy-pie-chart {
+  margin-top: 12px;
+}
+
+@media (max-width: 900px) {
+  .histogram-layout {
+    flex-direction: column;
+  }
 }
 
 .pie-chart-svg-container {
