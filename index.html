@@ -14,7 +14,18 @@
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <h1>Exam Statistics</h1>
+    <h1>
+      Exam Statistics
+      <div class="dark-mode-toggle-container">
+        <label class="dark-mode-toggle">
+          <input type="checkbox" id="darkModeToggle" />
+          <span class="toggle-slider">
+            <span class="sun-icon">☀</span>
+            <span class="moon-icon">☽</span>
+          </span>
+        </label>
+      </div>
+    </h1>
     <div id="statistics"></div>
     <div id="histogram"></div>
     <div id="content"></div>

@@ -489,15 +489,21 @@ function setupAccuracyPieChartHover() {
 
         // add overlay path
         if (svg) {
+          const isDarkMode = document.body.classList.contains("dark-mode");
           overlayPath = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "path"
           );
           overlayPath.setAttribute("d", pathData);
-          overlayPath.setAttribute("fill", "rgba(255, 255, 255, 0.3)");
+          overlayPath.setAttribute(
+            "fill",
+            isDarkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(255, 255, 255, 0.3)"
+          );
           overlayPath.setAttribute("class", "pie-segment-overlay");
           overlayPath.style.pointerEvents = "none";
-          overlayPath.style.filter = "drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))";
+          overlayPath.style.filter = isDarkMode
+            ? "none"
+            : "drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))";
           svg.appendChild(overlayPath);
         }
       }
@@ -664,15 +670,21 @@ function setupPieChartHover() {
 
         // add overlay path
         if (svg) {
+          const isDarkMode = document.body.classList.contains("dark-mode");
           overlayPath = document.createElementNS(
             "http://www.w3.org/2000/svg",
             "path"
           );
           overlayPath.setAttribute("d", pathData);
-          overlayPath.setAttribute("fill", "rgba(255, 255, 255, 0.3)");
+          overlayPath.setAttribute(
+            "fill",
+            isDarkMode ? "rgba(0, 0, 0, 0.3)" : "rgba(255, 255, 255, 0.3)"
+          );
           overlayPath.setAttribute("class", "pie-segment-overlay");
           overlayPath.style.pointerEvents = "none";
-          overlayPath.style.filter = "drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))";
+          overlayPath.style.filter = isDarkMode
+            ? "none"
+            : "drop-shadow(0 0 8px rgba(0, 0, 0, 0.3))";
           svg.appendChild(overlayPath);
         }
       }
@@ -718,7 +730,7 @@ function renderData() {
 
     const attemptsContainer = document.createElement("div");
     attemptsContainer.className = "attempts-container";
-    attemptsContainer.style.display = "block"; // default to open
+    attemptsContainer.style.display = "block"; // open by default
 
     questionData.attempts.forEach((attempt, index) => {
       const attemptDiv = document.createElement("div");
@@ -755,10 +767,12 @@ function renderData() {
       attemptsContainer.style.display = isExpanded ? "none" : "block";
       const toggle = questionHeader.querySelector(".question-toggle");
       toggle.textContent = isExpanded ? "▶" : "▼";
-      // Hide/show divider line based on collapsed state
+      // hide/show divider line based on collapsed state
+      const isDarkMode = document.body.classList.contains("dark-mode");
+      const dividerColor = isDarkMode ? "#444" : "#eee";
       questionHeader.style.borderBottom = isExpanded
         ? "none"
-        : "2px solid #eee";
+        : `2px solid ${dividerColor}`;
       questionHeader.style.marginBottom = isExpanded ? "0px" : "15px";
     });
 
@@ -767,7 +781,31 @@ function renderData() {
   });
 }
 
+// dark mode toggle switch
+function setupDarkModeToggle() {
+  const darkModeToggle = document.getElementById("darkModeToggle");
+  const body = document.body;
+
+  // check for saved dark mode preference or default to light mode
+  const isDarkMode = localStorage.getItem("darkMode") === "true";
+  if (isDarkMode) {
+    body.classList.add("dark-mode");
+    darkModeToggle.checked = true;
+  }
+
+  darkModeToggle.addEventListener("change", () => {
+    if (darkModeToggle.checked) {
+      body.classList.add("dark-mode");
+      localStorage.setItem("darkMode", "true");
+    } else {
+      body.classList.remove("dark-mode");
+      localStorage.setItem("darkMode", "false");
+    }
+  });
+}
+
 // initialize content
+setupDarkModeToggle();
 renderStatistics();
 renderChart();
 renderData();
