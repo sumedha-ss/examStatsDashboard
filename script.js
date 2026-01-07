@@ -804,8 +804,34 @@ function setupDarkModeToggle() {
   });
 }
 
+// scroll to top button
+function setupScrollToTop() {
+  const scrollToTopBtn = document.getElementById("scrollToTopBtn");
+  const initialScrollY = window.scrollY;
+
+  function handleScroll() {
+    if (window.scrollY > initialScrollY) {
+      scrollToTopBtn.classList.add("show");
+    } else {
+      scrollToTopBtn.classList.remove("show");
+    }
+  }
+
+  scrollToTopBtn.addEventListener("click", () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  });
+
+  window.addEventListener("scroll", handleScroll);
+  // check initial state
+  handleScroll();
+}
+
 // initialize content
 setupDarkModeToggle();
+setupScrollToTop();
 renderStatistics();
 renderChart();
 renderData();

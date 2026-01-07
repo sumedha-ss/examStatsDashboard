@@ -600,3 +600,41 @@ body.dark-mode .attempt-count {
 body.dark-mode .section-divider {
   background-color: #d4c5a9;
 }
+
+.scroll-to-top {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  background-color: #928156;
+  color: white;
+  border: none;
+  border-radius: 50%;
+  font-size: 24px;
+  cursor: pointer;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, transform 0.3s ease;
+  z-index: 1000;
+  font-family: "Rubik", sans-serif;
+}
+
+.scroll-to-top:hover {
+  background-color: #7a6f5a;
+  transform: scale(1.1);
+}
+
+.scroll-to-top.show {
+  display: flex;
+}
+
+body.dark-mode .scroll-to-top {
+  background-color: #7a6f5a;
+}
+
+body.dark-mode .scroll-to-top:hover {
+  background-color: #5d5445;
+}
