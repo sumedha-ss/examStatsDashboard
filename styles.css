@@ -214,6 +214,187 @@ h1 {
   }
 }
 
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+  body {
+    padding: 20px 10px 10px 10px;
+  }
+
+  h1 {
+    padding: 15px;
+    font-size: 20px;
+    margin-bottom: 30px;
+    margin-top: 0;
+  }
+
+  .dark-mode-toggle-container {
+    padding-right: 5px;
+  }
+
+  .toggle-slider {
+    width: 50px;
+    height: 26px;
+  }
+
+  .toggle-slider::before {
+    width: 20px;
+    height: 20px;
+  }
+
+  .dark-mode-toggle input:checked + .toggle-slider::before {
+    transform: translateX(24px);
+  }
+
+  .section-title,
+  .section-title-two {
+    font-size: 20px;
+  }
+
+  .statistics-container {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .stat-card {
+    max-width: 100%;
+  }
+
+  .histogram-container {
+    padding: 15px;
+  }
+
+  .histogram-title {
+    font-size: 18px;
+  }
+
+  .histogram-subtitle {
+    font-size: 13px;
+  }
+
+  .histogram-bar-label {
+    min-width: 100px;
+    font-size: 14px;
+  }
+
+  .histogram-bar-value {
+    font-size: 14px;
+  }
+
+  .pie-chart {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .pie-chart-svg-container {
+    width: 180px;
+    height: 180px;
+  }
+
+  .chart-toggle-btn {
+    font-size: 12px;
+    padding: 6px 12px;
+  }
+
+  #content {
+    column-count: 1 !important;
+    margin-top: -20px;
+  }
+
+  .question-container {
+    padding: 15px;
+  }
+
+  .question-id {
+    font-size: 13px;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .section-divider {
+    margin: 30px 0 20px 0;
+  }
+
+  .scroll-to-top {
+    width: 45px;
+    height: 45px;
+    font-size: 20px;
+    bottom: 15px;
+    right: 15px;
+  }
+
+  .attempt {
+    padding: 8px;
+  }
+
+  .attempt-header {
+    flex-wrap: wrap;
+  }
+
+  .solution {
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 480px) {
+  body {
+    padding: 8px;
+  }
+
+  h1 {
+    padding: 12px;
+    font-size: 18px;
+    margin-bottom: 20px;
+  }
+
+  .section-title,
+  .section-title-two {
+    font-size: 18px;
+  }
+
+  .stat-card {
+    padding: 15px;
+  }
+
+  .stat-label {
+    font-size: 13px;
+  }
+
+  .stat-value {
+    font-size: 24px;
+  }
+
+  .histogram-bar-label {
+    min-width: 80px;
+    font-size: 13px;
+  }
+
+  .histogram-bar-container {
+    height: 35px;
+  }
+
+  .pie-chart-svg-container {
+    width: 150px;
+    height: 150px;
+  }
+
+  .pie-label,
+  .pie-value {
+    font-size: 14px;
+  }
+
+  .question-container {
+    padding: 12px;
+  }
+
+  .question-id {
+    font-size: 12px;
+  }
+
+  .attempt-count {
+    font-size: 11px;
+  }
+}
+
 .pie-chart-svg-container {
   position: relative;
   width: 200px;
